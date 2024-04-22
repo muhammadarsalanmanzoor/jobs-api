@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -32,6 +33,16 @@ UserSchema.pre('save', async function (next) {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
+
+// ***** mongoose instance method, that is available inside our document *****
+UserSchema.methods.createJWT = function () {
+  // ***** In this function we can also access the document *****
+  // ***** this points to the document *****
+  // ***** Now i simply wanna call this function, inside our register controller *****
+  return jwt.sign({ userId: this._id, name: this.name }, 'jwtSecret', {
+    expiresIn: '30d',
+  });
+};
 
 const User = mongoose.model('User', UserSchema);
 
