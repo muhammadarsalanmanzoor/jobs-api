@@ -39,9 +39,13 @@ UserSchema.methods.createJWT = function () {
   // ***** In this function we can also access the document *****
   // ***** this points to the document *****
   // ***** Now i simply wanna call this function, inside our register controller *****
-  return jwt.sign({ userId: this._id, name: this.name }, 'jwtSecret', {
-    expiresIn: '30d',
-  });
+  return jwt.sign(
+    { userId: this._id, name: this.name },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRY_TIME,
+    }
+  );
 };
 
 const User = mongoose.model('User', UserSchema);

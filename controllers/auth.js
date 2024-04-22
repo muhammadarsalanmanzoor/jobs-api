@@ -1,26 +1,25 @@
 const { StatusCodes } = require('http-status-codes');
-const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+/**
+ *
+ * JWT SECRET AND JWT LIFETIME
+ * - So remember in our options we go with expires in and as far as default setup
+ *   so if we just provide a number this is going to be in seconds, now if we
+ *   provide a string, then we need to make sure that we add time units, whether
+ *   at the days hours and all that otherwise it's going to be interpreted as
+ *   milliseconds so we put something like this "120" then it should be "120ms".
+ *
+ * - As far as the JWT secret string, the more proper setup is generating a some
+ *   kind of more secure key and i prefer using `allkeysgenerator.com` and look
+ *   for encryption key tab and more specifically looking for 256bit one and
+ *   then of course, you can get the value and just take that value and stick it
+ *   in the .env file
+ *
+ *
+ */
+
 const register = async (req, res) => {
-  /**
-   * To complete our register functionality, let's learn about schema
-   * instance methods in mongoose, look the docs navigate to Schema
-   * and inside Schema navigate to instance methods and essentially
-   * what happens every document we create, we can have functions on
-   * them, so these are gonna be instances of course our schema and the
-   * way we setup those functions, we go with schema name then methods
-   * and then whatever function you want, so essentially once i create
-   * that user over here in the register controller that user will
-   * have a function, you can probably already guess that will create
-   * a function that just generates that token and of course in that
-   * function we'll pretty much have the same token code and therefore
-   * we won't have to bother with that in the actual controller in
-   * the register controller. So let's start and go inside the User
-   * Schema folder and lets just go with UserSchema.methods.yourFunction
-   * and this method will always point to our document.
-   *
-   */
   const user = await User.create({ ...req.body });
   const token = user.createJWT();
 
